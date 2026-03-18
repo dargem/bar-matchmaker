@@ -67,7 +67,7 @@ swap = rng.random(len(features)) < 0.5
 
 # %%
 X = pd.DataFrame({
-    "match_id": features["match_id"],
+    # drop match ID
     "team_0_skill": np.where(swap, features["loss_skill_mean"], features["win_skill_mean"]),
     "team_1_skill": np.where(swap, features["win_skill_mean"], features["loss_skill_mean"]),
     "team_0_uncertainty": np.where(swap, features["loss_uncertainty_mean"], features["win_uncertainty_mean"]),
@@ -88,4 +88,14 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.75, random_state=42
 )
 
+# %%
+from sklearn.ensemble import RandomForestClassifier
+
+clf = RandomForestClassifier(max_depth=2, random_state=0)
+clf.fit(X_train, y_train)
+
+# %%
+predictions = clf.predict(X_test)
+
+# accuracy = accuracy_score(y_test, predictions)
 # %%
